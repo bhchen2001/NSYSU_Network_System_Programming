@@ -1,2 +1,6 @@
 # zip file
 *.zip
+
+# c program file
+*.o
+*.exe
