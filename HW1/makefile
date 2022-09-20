@@ -17,7 +17,7 @@ run:
 	# 	echo text | ./hw1_tee [-a] <filename>
 	# 2. cp
 	# 	./hole_file_generator
-	# 	cp <file> <newfile>
+	# 	./hw1_cp <file> <newfile>
 
 clean:
 	rm -f $(TEE_FILE) $(TEE_FILE).o
