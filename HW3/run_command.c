@@ -13,7 +13,6 @@
 void run_command(char **myArgv) {
     pid_t pid;
     int stat, cur = 0;
-    char **tmpArgv;
 
     /* Create a new child process.
      * Fill in code.
@@ -34,7 +33,7 @@ void run_command(char **myArgv) {
 			 */
 
             if(is_background(myArgv) == FALSE){
-                if(waitpid(pid, &stat, 0) == -1){
+                if(waitpid(-1, &stat, 0) == -1){
                     perror("waitpid");
                     exit(1);
                 }
@@ -55,7 +54,7 @@ void run_command(char **myArgv) {
 			 */
 			if(is_background(myArgv) == TRUE){
 				while(strcmp(myArgv[cur], "&") != 0) cur += 1;
-				strcpy(myArgv[cur], (char *)NULL);
+				myArgv[cur] = (char *) NULL;
 			}
             execvp(myArgv[0], myArgv);
 
