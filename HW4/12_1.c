@@ -104,6 +104,16 @@ int main(int argc, char *argv[]){
                 exit(1);
             }
         }
+
+        if(close(status_fd) == -1){
+            perror("close");
+            exit(1);
+        }
+    }
+
+    if(closedir(proc_dir) == -1){
+        perror("closedir for proc_dir");
+        exit(1);
     }
 
     return 0;

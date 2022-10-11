@@ -14,9 +14,11 @@ run:
 	#
 	# instruction of hw4
 	# 1.
-	# 	./12_1 <filename> (absolute pathname for <filename>)
-	# 2
+	# 	./12_1 <username>
+	# 2.
 	#	./12_2
+	# 3.
+	#	./12_3 <filename> (absolute pathname for <filename>)
 
 clean:
 	rm -f $(12_1_FILE) $(12_1_FILE).o
