@@ -48,8 +48,10 @@ void run_command(char **myArgv) {
     	case 0 :
 
       		/* Redirect input and update argv. */
+			redirect_in(myArgv);
 
       		/* Redirect output and update argv. */
+			redirect_out(myArgv);
 
       		pipe_and_exec(myArgv);
       		exit(errno);

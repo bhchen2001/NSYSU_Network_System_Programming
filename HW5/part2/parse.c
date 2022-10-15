@@ -27,11 +27,24 @@ char ** parse(char *line) {
 	 * Fill in code.
      */
 
+	token = strtok(line, delim);
+	if(token == (char *)NULL) return NULL;
+
 
   	/* Create array with room for first token.
   	 *
 	 * Fill in code.
 	 */
+
+	if((newArgv = (char **)malloc(sizeof(char *))) == NULL){
+		perror("malloc char **");
+		exit(1);
+	}
+	if((newArgv[count] = (char *)malloc(100*sizeof(char))) == NULL){
+		perror("malloc char *");
+		exit(1);
+	}
+	strcpy(newArgv[count++], token);
 
 
   	/* While there are more tokens...
@@ -42,12 +55,36 @@ char ** parse(char *line) {
 	 * 
   	 * Fill in code.
 	 */
+	while(token){
+		token = strtok(NULL, delim);
+		if(token == (char *)NULL) break;
+		if((newArgv = realloc(newArgv, (count + 1)*sizeof(char *))) == NULL){
+			perror("realloc char **");
+			exit(1);
+		}
+		if((newArgv[count] = malloc(100 * sizeof(char))) == NULL){
+			perror("realloc char *");
+			exit(1);
+		}
+		strcpy(newArgv[count++], token);
+	}
 
 
   	/* Null terminate the array and return it.
 	 *
   	 * Fill in code.
 	 */
+
+	if((newArgv = realloc(newArgv, (count + 1)*sizeof(char *))) == NULL){
+		perror("realloc char **");
+		exit(1);
+	}
+	if((newArgv[count] = malloc(1 * sizeof(char))) == NULL){
+		perror("realloc char *");
+		exit(1);
+	}
+	newArgv[count] = (char *)NULL;
+
 
   	return newArgv;
 }
@@ -66,4 +103,11 @@ void free_argv(char **oldArgv) {
 	 *
 	 * Fill in code.
 	 */
+
+	while(oldArgv[i] != (char *)NULL){
+		free(oldArgv[i]);
+		i++;
+	}
+
+	free(oldArgv);
 }

@@ -16,9 +16,19 @@
 int redirect_out(char ** myArgv) {
 	int i = 0;
   	int fd;
+	errno = 1;
 
   	/* search forward for >
   	 * Fill in code. */
+	
+	while(myArgv[i] != (char *)NULL){
+		if(strcmp(myArgv[i], ">") == 0){
+			errno = 0;
+			break;
+		}
+		i++;
+	}
+	if(errno == 1) return -1;
 
   	if (myArgv[i]) {	/* found ">" in vector. */
 
@@ -28,6 +38,17 @@ int redirect_out(char ** myArgv) {
     	 * 4) Remove the ">" and the filename from myArgv.
 		 *
     	 * Fill in code. */
+
+		if((fd = open(myArgv[i + 1], O_CREAT | O_WRONLY | O_TRUNC, 0660)) == -1){
+			perror("open");
+			exit(1);
+		}
+		if(dup2(fd, STD_OUTPUT) == -1){
+			perror("dup2");
+			exit(1);
+		}
+		close(fd);
+		myArgv[i] = (char *)NULL;
   	}
   	return 0;
 }

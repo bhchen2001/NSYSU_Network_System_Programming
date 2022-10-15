@@ -2,6 +2,7 @@
 
 #define FALSE 0
 #define TRUE (!FALSE)
+#define BUFFER_SIZE 1024
 
 char ** parse(char *);		/* tokenise a string */
 void free_argv(char **);	/* free argv array. */

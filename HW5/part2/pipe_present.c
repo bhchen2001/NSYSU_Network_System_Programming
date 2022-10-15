@@ -14,12 +14,18 @@ int pipe_present(char ** myCurrentArgv) {
 	int index = 0;
 
   	/* Search through myCurrentArgv for a match on "|". */
+	while(myCurrentArgv[index] != (char *)NULL){
+		if(strcmp(myCurrentArgv[index], "|") == 0){
+			break;
+		}
+		index++;
+	}
 
-  	if /* At the beginning or at the end. */ {
+	if(myCurrentArgv[index] == (char *)NULL){
+		return 0;
+
+	} else if((index == 0) || (myCurrentArgv[index + 1] == (char *)NULL)){
     	return -1;
-
-  	} else if /* Off the end. */ {
-    	return 0;
 
   	} else {
     	/* In the middle. */

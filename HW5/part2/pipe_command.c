@@ -6,6 +6,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <errno.h>
+#include <string.h>
 
 #include "shell.h"
 
@@ -17,6 +18,8 @@ void pipe_and_exec(char **myArgv) {
   	int pipefds[2];
 	char **left_argv;
 	char **right_argv;
+	pid_t pid;
+	int i;
 
   	switch (pipe_argv_index) {
 
@@ -27,6 +30,7 @@ void pipe_and_exec(char **myArgv) {
 
     	case 0:	/* No pipe found in argv array or at end of argv array.
 			See pipe_present().  Exec with whole given argv array. */
+			execvp(myArgv[0], myArgv);
       		break;
 
     	default:	/* Pipe in the middle of argv array.  See pipe_present(). */
@@ -36,15 +40,47 @@ void pipe_and_exec(char **myArgv) {
 			 *
        		 * Fill in code. */
 
+			if((left_argv = (char **)malloc(pipe_argv_index * sizeof(char *))) == NULL){
+				perror("malloc char **");
+				exit(1);
+			}
+
+			for(i = 0; i < pipe_argv_index && myArgv[i] != (char *)NULL; i++){
+				if((left_argv[i] = (char *)malloc(50 * sizeof(char *))) == NULL){
+					perror("malloc char **");
+					exit(1);
+				}
+				strcpy(left_argv[i], myArgv[i]);
+			}
+			left_argv[i] = '\0';
+
+			if((right_argv = (char **)malloc(20 * sizeof(char *))) == NULL){
+				perror("malloc char **");
+				exit(1);
+			}
+			for(i = pipe_argv_index + 1; (myArgv[i] != (char *)NULL) && (strcmp(myArgv[i], "|")  != 0); i++){
+				if((right_argv[i - pipe_argv_index - 1] = (char *)malloc(50 * sizeof(char *))) == NULL){
+					perror("malloc char **");
+					exit(1);
+				}
+				strcpy(right_argv[(i - pipe_argv_index - 1)], myArgv[i]);
+			}
+			right_argv[i - pipe_argv_index - 1] = '\0';
+
       		/* Create a pipe to bridge the left and right halves of the vector. 
 			 *
 			 * Fill in code. */
+
+			if(pipe(pipefds) == -1){
+				perror("pipe");
+				exit(1);
+			}
 
       		/* Create a new process for the right side of the pipe.
        		 * (The left side is the running "parent".)
        		 *
 			 * Fill in code to replace the underline. */
-      		switch(_______) {
+      		switch(fork()) {
 
         		case -1 :
 	  				break;
@@ -57,6 +93,14 @@ void pipe_and_exec(char **myArgv) {
 	 	 			 * - Exec the left command.
 					 *
 					 * Fill in code. */
+
+					close(pipefds[0]);
+					if(pipefds[1] != 1){
+						dup2(pipefds[1], 1);
+						close(pipefds[1]);
+					}
+
+					execvp(left_argv[0], left_argv);
 	  				break;
 
         		/* Listening child. */
@@ -67,7 +111,14 @@ void pipe_and_exec(char **myArgv) {
 				  	 * - Exec command on right side of pipe and recursively deal with other pipes
 					 *
 					 * Fill in code. */
-					 
+
+					close(pipefds[1]);
+					if(pipefds[0] != 0){
+						dup2(pipefds[0], 0);
+						close(pipefds[0]);
+					}
+
+					execvp(right_argv[0], right_argv);
           			pipe_and_exec(&myArgv[pipe_argv_index+1]);
 			}
 	}

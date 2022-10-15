@@ -55,26 +55,104 @@ static struct cmd {
 
 static void bi_builtin(char ** argv) {
 	/* Fill in code. */
+	int i = 0;
+	char output[BUFFER_SIZE];
+	for(i = 0; i < 10; i++){
+		if(strcmp(argv[1], inbuilts[i].keyword) == 0){
+			snprintf(output, BUFFER_SIZE, "%s is a builtin feature\n", argv[1]);
+			if((write(STDOUT_FILENO, output, strlen(output))) == -1){
+				perror("bi_builtin write");
+				exit(1);
+			}
+			break;
+		}
+	}
+	if(i >= 10){
+		snprintf(output, BUFFER_SIZE, "%s is NOT a builtin feature\n", argv[1]);
+		if((write(STDOUT_FILENO, output, strlen(output))) == -1){
+			perror("bi_builtin write");
+			exit(1);
+		}
+	}
 }
 
 static void bi_cd(char **argv) {
 	/* Fill in code. */
+	if(chdir(argv[1]) == -1){
+		perror("chdir");
+		exit(1);
+	}
 }
 
 static void bi_echo(char **argv) {
 	/* Fill in code. */
+	int index = 1;
+	char output[BUFFER_SIZE];
+	while(argv[index] != NULL){
+		if(write(STDOUT_FILENO, argv[index], strlen(argv[index])) == -1){
+			perror("echo write");
+			exit(1);
+		}
+	}
 }
 
 static void bi_hostname(char ** argv) {
 	/* Fill in code. */
+	struct utsname buf;
+	if((uname(&buf)) == -1){
+		perror("uname");
+		exit(1);
+	}
+
+	char output[strlen(buf.sysname) + 1];
+	strcpy(output, buf.sysname);
+	strcat(output, "\n");
+	if((write(STDOUT_FILENO, output, strlen(output))) == -1){
+		perror("write");
+		exit(1);
+	}
 }
 
 static void bi_id(char ** argv) {
  	/* Fill in code. */
+	uid_t uid;
+	gid_t gid;
+	long hostid;
+	struct passwd *pwuid;
+	struct group *g;
+	char output[BUFFER_SIZE];
+	uid = getuid();
+	gid = getgid();
+	if((pwuid = getpwuid(uid)) == NULL){
+		perror("getpwuid");
+		exit(1);
+	}
+	if((g = getgrgid(gid)) == NULL){
+		perror("getgrgid");
+		exit(1);
+	}
+	snprintf(output, BUFFER_SIZE, "UserID = %d(%s), GroupID = %d(%s)\n", uid, pwuid->pw_name, gid, g->gr_name);
+	if((write(STDOUT_FILENO, output, strlen(output))) == -1){
+		perror("write");
+		exit(1);
+	}
 }
 
 static void bi_pwd(char ** argv) {
 	/* Fill in code. */
+	char *dir = NULL;
+	if((dir = getcwd(NULL, 0)) == NULL){
+		perror("getcwd");
+		exit(1);
+	}
+
+	char output[strlen(dir) + 1];
+	strcpy(output, dir);
+	strcat(output, "\n");
+	if((write(STDOUT_FILENO, output, strlen(output))) == -1){
+		perror("write");
+		exit(1);
+	}
 }
 
 static void bi_quit(char **argv) {
