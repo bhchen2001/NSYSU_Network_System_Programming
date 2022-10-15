@@ -117,8 +117,6 @@ void pipe_and_exec(char **myArgv) {
 						dup2(pipefds[0], 0);
 						close(pipefds[0]);
 					}
-
-					execvp(right_argv[0], right_argv);
           			pipe_and_exec(&myArgv[pipe_argv_index+1]);
 			}
 	}
