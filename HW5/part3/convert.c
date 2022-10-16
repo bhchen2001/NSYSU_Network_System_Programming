@@ -21,11 +21,15 @@ int main(int argc, char **argv) {
 	FILE *out;        /* defaults */
 	char line[BIGLINE];
 	static Dictrec dr, blank;
+	int count = 0;
+
+	memset(dr.word, NULL, WORD);
+	memset(dr.text, NULL, TEXT);
 	
 	/* If args are supplied, argv[1] is for input, argv[2] for output */
 	if (argc==3) {
 		if ((in =fopen(argv[1],"r")) == NULL){DIE(argv[1]);}
-		if ((out =fopen(argv[2],"w")) == NULL){DIE(argv[2]);}	
+		if ((out =fopen(argv[2],"wb")) == NULL){DIE(argv[2]);}	
 	}
 	else{
 		printf("Usage: convert [input file] [output file].\n");
@@ -47,13 +51,37 @@ int main(int argc, char **argv) {
 		 *
 		 * Fill in code. */
 
+		errno = 0;
+		if(fgets(line, BIGLINE, in) == NULL && errno != 0) DIE("fgets");
+		if(line[0] == '\n') continue;
+		int i;
+		for(i = 0; i < strlen(line); i++) dr.word[i] = line[i];
+
 		/* Read definition, line by line, and put in record.
 		 *
 		 * Fill in code. */
 
+		if(fgets(line, BIGLINE, in) == NULL && errno != 0) DIE("fgets");		
+		while(line[0] != '\n'){
+			for(i = 0; i < strlen(line); i++) dr.text[count + i] = line[i];
+			count += strlen(line);
+			errno = 0;
+			if(fgets(line, BIGLINE, in) == NULL && errno != 0) DIE("fgets");
+		}
+		// add newline at the end of text
+		dr.text[count] = '\n';
+		count = 0;
+
 		/* Write record out to file.
 		 *
 		 * Fill in code. */
+
+		// write the content and padded NULL into file
+		if(fwrite(dr.word, WORD, 1, out) < 0) DIE("fwrite");
+		if(fwrite(dr.text, TEXT, 1, out) < 0) DIE("fwrite");
+
+		memset(dr.word, NULL, WORD);
+		memset(dr.text, NULL, TEXT);
 	}
 
 	fclose(in);
