@@ -9,7 +9,7 @@
 
 int main(int argc, char *argv[]){
 	int pd[2];
-	char buf[BUFFER_SIZE];
+	char buf[BUFFER_SIZE] = {NULL};
 	char *command[3] = {"ls", "-la", (char*)NULL};
 
 	if(pipe(pd) == -1){
