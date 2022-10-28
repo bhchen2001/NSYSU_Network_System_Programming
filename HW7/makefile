@@ -11,7 +11,7 @@ run:
 	CC -o $(22_4_FILE) $(22_4_FILE).o
 
 	clear
-	# instruction of HW6
+	# instruction of HW7
 	# 1. 
 	#	./22_3 <sig_num>
 	# 2.
