@@ -15,7 +15,7 @@ run:
 	# 1. 
 	#	./22_3 <sig_num>
 	# 2.
-	# 	./22_4 <func>
+	# 	./22_4 <func> (sigset, sighold, sigrelse, sigignore, sigpause)
 
 clean:
 	rm -f $(22_3_FILE) $(22_3_FILE).o
