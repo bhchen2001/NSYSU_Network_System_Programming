@@ -14,7 +14,7 @@
 typedef void (*sighandler_t) (int);
 
 void handler(int sig){
-	printf("signal arrived at handler");
+	printf("signal arrived at handler\n");
 }
 
 void kill_proc(int sig){
@@ -62,16 +62,16 @@ sighandler_t mySigset(int sig, sighandler_t handler){
 			return (sighandler_t) -1;
 		}
 	}
-	else if(handler == SIG_HOLD){
-		/* add sig to signal mask, but leave the disposition unchanged */
-		sa.sa_handler = handler;
-		if(sigaction(sig, &sa, &old_sa) == -1){
-			perror("sigaction");
-			return (sighandler_t) -1;
-		}
-		mySighold(sig);
-		return old_sa.sa_handler;
-	}
+	// else if(handler == SIG_HOLD){
+	// 	/* add sig to signal mask, but leave the disposition unchanged */
+	// 	sa.sa_handler = handler;
+	// 	if(sigaction(sig, &sa, &old_sa) == -1){
+	// 		perror("sigaction");
+	// 		return (sighandler_t) -1;
+	// 	}
+	// 	mySighold(sig);
+	// 	return old_sa.sa_handler;
+	// }
 	else{
 		/* other signal handler function */
 		sa.sa_handler = handler;
@@ -89,10 +89,11 @@ sighandler_t mySigset(int sig, sighandler_t handler){
 		perror("sigprocmask");
 			return (sighandler_t) -1;
 	}
-	/* if the handler os anything other than SIG_HOLD, remove the sig from the signal mask */
+	/* if the handler is anything other than SIG_HOLD, remove the sig from the signal mask */
 	if(sigismember(&block_sig, sig)){
 		mySigrelse(sig);
-		return SIG_HOLD;
+		// return SIG_HOLD;
+		return old_sa.sa_handler;
 	}
 	else{
 		return old_sa.sa_handler;

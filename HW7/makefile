@@ -6,9 +6,9 @@ SIG_SPEED_FILE = sig_speed_sigsuspend
 all:run
 
 run:
-	CC -c $(22_3_FILE).c $(22_4_FILE).c
-	CC -o $(22_3_FILE) $(22_3_FILE).o
-	CC -o $(22_4_FILE) $(22_4_FILE).o
+	$(CC) -c $(22_3_FILE).c $(22_4_FILE).c
+	$(CC) -o $(22_3_FILE) $(22_3_FILE).o
+	$(CC) -o $(22_4_FILE) $(22_4_FILE).o
 
 	clear
 	# instruction of HW7

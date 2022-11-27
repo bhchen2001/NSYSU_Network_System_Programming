@@ -63,7 +63,7 @@ void build_pstree(){
 
 void print_pstree_recursive(struct proc_node *node, int level){
     struct proc_node *cnode;
-    char *output[BUFFER_SIZE], *space = malloc(10 * sizeof(char));
+    char *output[BUFFER_SIZE] = {NULL}, *space = malloc(10 * sizeof(char));
     int i = 0;
     for(i = 0; i < 2 * level ; i++) strcat(space, " ");
     snprintf(output, BUFFER_SIZE, "%s-command: %s, pid: %d, ppid: %d\n", space, node->name, node->pid, node->ppid);
@@ -102,7 +102,7 @@ int main(int argc, char *argv){
     }
 
     while((status_dir = readdir(proc_dir)) != NULL){
-        char status_dir_name[BUFFER_SIZE], status_content[BUFFER_SIZE], *line, name[BUFFER_SIZE];
+        char status_dir_name[BUFFER_SIZE] = {NULL}, status_content[BUFFER_SIZE] = {NULL}, *line, name[BUFFER_SIZE] = {NULL};
         int name_flag = 0, pid_flag = 0, ppid_flag = 0;
         pid_t pid, ppid;
         snprintf(status_dir_name, BUFFER_SIZE, "/proc/%s/status", status_dir->d_name);
