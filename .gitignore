@@ -1,6 +1,12 @@
 # zip file
 *.zip
 
+# env folder
+*env
+
+# py file
+*.py
+
 # c program file
 *.o
 *.exe
