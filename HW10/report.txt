@@ -1,0 +1,7 @@
+1. 結果如figure1.png所示
+2. 結果如figure2.png所示
+    * 上述兩題皆有在consumer端正確接收message時呼叫usleep以模擬資料處理時間
+3. OS:Ubuntu 22.04.1 LTS x86_64, Memory: 16GB, CPU: AMD Ryzen 5 5625U with Radeon Graphics (12) @ 4.388GHz
+4. 我認為buffer size 是影響loss rate的重要因素，因為在transfer rate較快的情況下，時常會有consumer來不及存取對應message的情況。
+5. 若transfer rate固定，consumer可以不用透過等待signal，而是等待對應的時間長度後直接存取memory，這樣可以避免producer傳送多個signal給consumer所可能帶來的超時情況
+（在原始程式中，producer會在超時後停止傳送signal，因此有些consumer會沒有收到signal造成loss）。
