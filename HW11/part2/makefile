@@ -4,7 +4,6 @@ LOOKUP5_FILE = lookup5
 LOOKUP8_FILE = lookup8
 ISOCK_SERVER_FILE = isock_server
 ISOCK_CILENT_FILE = isock_client
-TUNNEL_FILE = TUNNEL
 
 all:run
 
@@ -14,7 +13,7 @@ run:
 	$(CC) -o $(ISOCK_SERVER_FILE) $(ISOCK_SERVER_FILE).o $(LOOKUP5_FILE).o
 	clear
 
-	# instruction for HW11 part1
+	# instruction for HW11 part2
 	# 	./isock_server <dictionary>
 	# 	./isock_client <socket_name>
 
